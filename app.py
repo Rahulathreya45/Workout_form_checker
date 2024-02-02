@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-load_dotenv()  ## load all the environment variables
+load_dotenv()
 
 import streamlit as st
 import os
@@ -18,14 +18,12 @@ def get_gemini_response(input, image):
 
 
 def input_image_setup(uploaded_file):
-    # Check if a file has been uploaded
     if uploaded_file is not None:
-        # Read the file into bytes
         bytes_data = uploaded_file.getvalue()
 
         image_parts = [
             {
-                "mime_type": uploaded_file.type,  # Get the mime type of the uploaded file
+                "mime_type": uploaded_file.type,
                 "data": bytes_data,
             }
         ]
@@ -40,34 +38,10 @@ Please assess whether the form is correct.
 If the form is incorrect, offer corrective advice in bullet points.
 """
 
-
-# def analyze_form(image, exercise):
-#     image_parts = input_image_setup(image)  # Prepare image for Gemini Pro Vision
-#     complete_prompt = input_prompt.format(Exercise=exercise)
-#     feedback = get_gemini_response(
-#         complete_prompt,
-#         image_parts,
-#     )
-#     return feedback
-
-
-# iface = gr.Interface(
-#     fn=analyze_form,
-#     inputs=[
-#         gr.Image(label="Upload Exercise Image"),
-#         gr.Textbox(label="Enter Exercise Name"),
-#     ],
-#     outputs="textbox",
-#     title="Exercise Form Checker",
-#     description="Upload an image, enter the exercise, and check your form.",
-# )
-
-# iface.launch()
-
 st.set_page_config(page_title="Form checker App")
 
 st.header("Form checker")
-# input = st.text_input("Input Prompt: ", key="input")
+
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 image = ""
 if uploaded_file is not None:
