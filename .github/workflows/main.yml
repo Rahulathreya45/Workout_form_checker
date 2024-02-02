@@ -1,20 +1,29 @@
-name: Sync to Hugging Face hub
+name: Deploy to Hugging Face Spaces
+
 on:
   push:
-    branches: [main]
-
-  # to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [ main ]  # Replace `main` with your deployment branch
 
 jobs:
-  sync-to-hub:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt  # Replace with your requirements file
+
+      - name: Prepare Hugging Face Spaces credentials
+        run: |
+          echo "HF_TOKEN=${{ secrets.HF_TOKEN }}" >> $GITHUB_ENV
+          echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Deploy to Hugging Face Spaces
+        uses: huggingface/spaces-action@v1
         with:
-          fetch-depth: 0
-          lfs: true
-      - name: Push to hub
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git remote set-url origin git@hf.co:spaces/rahulathreya45/Workout_form_checker
+          repo: 'rahulathreya45/Workout_form_checker'  # Replace with your repo
+          branch: ${{ github.sha }}
+          commit: ${{ github.sha }}
+          secret: ${{ secrets.HF_TOKEN }}
+
